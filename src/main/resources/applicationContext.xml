@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!--    <context:component-scan base-package="edu.yanchuk.spring.demo" />-->
+    <context:property-placeholder location="classpath:application.properties"/>
+
+    <bean id="userDAO"
+          class="com.example.implementation.dao.UserDAOImpl"/>
+
+    <bean id="eventDAO"
+          class="com.example.implementation.dao.EventDAOImpl"/>
+
+    <bean id="ticketDAO"
+          class="com.example.implementation.dao.TicketDAOImpl"/>
+
+    <bean id="userService"
+          class="com.example.implementation.services.UserServiceImpl">
+        <constructor-arg ref="userDAO"/>
+    </bean>
+
+    <bean id="eventService"
+          class="com.example.implementation.services.EventServiceImpl">
+        <constructor-arg ref="eventDAO"/>
+    </bean>
+
+    <bean id="ticketService"
+          class="com.example.implementation.services.TicketServiceImpl">
+        <constructor-arg ref="ticketDAO"/>
+    </bean>
+
+    <bean id="storage"
+          class="com.example.implementation.Storage"
+          init-method="initStorage">
+        <property name="dataFilePath"
+                  value="${data.file.path}"/>
+    </bean>
+
+    <bean id="bookingFacade" class="com.example.implementation.BookingFacadeImpl">
+        <constructor-arg ref="userService"/>
+        <constructor-arg ref="eventService"/>
+        <constructor-arg ref="ticketService"/>
+    </bean>
+</beans>
